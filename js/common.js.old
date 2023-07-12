@@ -1,0 +1,273 @@
+$(document).ready(function() {
+
+
+    $('form').on('submit', function(e) {
+        console.log(e)
+        e.preventDefault();
+        //let data = []
+
+
+        let data = $(this).serialize();
+
+
+        console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: './sendmail.php',
+            data: data,
+            success: function(resp) {
+                console.log(resp);
+                body.classList.add("modal-succefull-open");
+                const modal = document.querySelector(".modal-succeful");
+                body.addEventListener("click", (e) => {
+                    if (e.target.contains(modal)) {
+                        body.classList.remove("modal-succefull-open");
+                    }
+                });
+            },
+            error: function() {
+                console.log('error')
+            }
+        });
+
+    })
+
+    const body = document.querySelector("body");
+
+    function slowScroll(id) {
+        var offset = 0;
+        $('html, body').animate({
+            scrollTop: $(id).offset().top - offset
+        }, 100);
+        return false;
+    }
+    $('.scroll-top').on('click', function() {
+        slowScroll('.wrapper');
+    });
+
+    $('.rec__slider').slick({
+        infinite: false,
+        speed: 300,
+        slidesToShow: 3,
+        responsive: [{
+                breakpoint: 700,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 500,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+        ]
+    });
+    $('.license__slider').slick({
+        infinite: false,
+        speed: 300,
+        arrows: false,
+        dots: true,
+        slidesToShow: 3,
+        responsive: [{
+                breakpoint: 700,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 500,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+        ]
+    });
+
+
+    $('.catalog__tabs-item').on('click', function() {
+        $('.catalog__tabs-item').removeClass('catalog__tabs-item--active');
+        let btnAttr = $(this).attr('data-id');
+        $(this).addClass('catalog__tabs-item--active');
+
+        $('.catalog__content').removeClass('catalog__content--active');
+
+        $('.catalog__content[data-id=' + btnAttr + ']').addClass('catalog__content--active');
+
+    })
+
+    //=========================discount slider======================//
+    const discountSlider = document.querySelector(".discount__wrapper-slider");
+
+    if (discountSlider) {
+        new Swiper(discountSlider, {
+            slidesPerView: 1,
+            allowTouchMove: false,
+            pagination: {
+                el: '.discount-pagination',
+                type: 'fraction',
+            },
+            navigation: {
+                nextEl: ".discount__wrapper-btn",
+            },
+        });
+    }
+
+    // $('input[name="nameq"], input[name="phone"]').on('keyup', function(){
+
+    // })
+
+    //=========================check active checkbox discount======================//
+    const discountItem = document.querySelectorAll(
+        ".discount__wrapper-slider .swiper-slide"
+    );
+
+    if (discountItem) {
+        function checkActive(disInput, btn) {
+            let i = 0;
+
+            disInput.forEach((item) => {
+                const input = item.querySelector("input");
+                if (input.checked) {
+                    i += 1;
+                }
+                if (input.getAttribute("type") == "text" && input.value != "") {
+                    console.log(input.value)
+                    i += 1;
+
+                }
+            });
+            try {
+                i == 0 ? btn.classList.add("disabled") : btn.classList.remove("disabled");
+                i = 0;
+            } catch (error) {
+                if ($('input[name="nameq"]').val().length > 2 && $('input[name="phoneq"]').val().length > 9) {
+                    $('.quiz').css('opacity', '1');
+                    $('.quiz').css('pointer-events', 'all')
+                }
+            }
+
+        }
+
+        // $('input[name="phoneq"]').mask("8(999) 999-9999");
+
+        discountItem.forEach((item) => {
+            const btn = item.querySelector(".discount__wrapper-btn"),
+                disInput = item.querySelectorAll(".discount__wrapper-input");
+
+            disInput.forEach((block) => {
+                const input = block.querySelector("input");
+                input.addEventListener("input", () => checkActive(disInput, btn));
+            });
+        });
+    }
+    $(".wrapper-burger").on("click", function() {
+        $(this).toggleClass("wrapper-burger-active");
+        $(".mobile-menu_wrapper").toggleClass("mobile-menu_wrapper-active");
+        $(".wrapper").toggleClass("wrapper-active");
+        $('body').toggleClass('body--hidden')
+    });
+
+    const arnchorLinks = document.querySelectorAll('a[href*="#"]');
+
+    arnchorLinks.forEach(function(el) {
+        el.addEventListener("click", function(e) {
+            e.preventDefault();
+
+
+            smoothScroll(this.href.replace(/[^#]*(.*)/, "$1"), 10, !0);
+            if (this.className === 'mobile-menu_link') {
+                $('.wrapper-burger').toggleClass("wrapper-burger-active");
+                $(".mobile-menu_wrapper").toggleClass("mobile-menu_wrapper-active");
+                $(".wrapper").toggleClass("wrapper-active");
+                $('body').toggleClass('body--hidden')
+            }
+        })
+    })
+
+    function smoothScroll(selector, dur, anchor) {
+        var duration = dur || 1e3,
+            startingYPoint = window.pageYOffset,
+            targetPosition = ("string" == typeof selector ? document.querySelector(selector) : selector).getBoundingClientRect().top,
+            startTime = performance.now();
+        window.requestAnimationFrame(function scroll(progress) {
+            var timeFraction = (progress - startTime) / duration,
+                progress = (progress = timeFraction = 1 < timeFraction ? 1 : timeFraction) < .5 ? 2 * progress * progress : (4 - 2 * progress) * progress - 1;
+            window.scrollTo(0, startingYPoint + targetPosition * progress),
+                timeFraction < 1 ? window.requestAnimationFrame(scroll) : anchor && (window.location.hash = selector)
+        })
+    }
+
+
+    //=========================close all modal======================//
+    const modalClose = document.querySelectorAll(".modal__close");
+
+    function hiddenModals() {
+        body.classList.remove("modal-question-open");
+        body.classList.remove("modal-form");
+        body.classList.remove("modal-order");
+        body.classList.remove("modal-succefull-open");
+    }
+
+    function ct() {
+
+        body.classList.remove("modal-open-code");
+        hiddenModals();
+    }
+
+    modalClose.forEach((btn) => {
+        btn.addEventListener("click", () => ct());
+
+    });
+
+    //=========================open modal order======================//
+    const btnOrder = document.querySelectorAll(".btn-order");
+
+    btnOrder.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            body.classList.add("modal-order");
+
+            const modalForm = document.querySelector(".modal-form");
+            body.addEventListener("click", (e) => {
+                if (e.target.contains(modalForm)) {
+                    body.classList.remove("modal-order");
+                }
+            });
+        });
+    });
+
+    //=========================open modal form======================//
+    const btnForm = $('.btn-form').on('click', function() {
+        body.classList.add("modal-form");
+
+        const modal = document.querySelector(".modal-calc");
+        body.addEventListener("click", (e) => {
+            if (e.target.contains(modal)) {
+                body.classList.remove("modal-form");
+            }
+        });
+    });
+
+
+    //=========================open modal code======================//
+    const btnCode = document.querySelector(".btn-code");
+
+    btnCode.addEventListener("click", () => {
+        body.classList.remove("modal-question-open");
+        body.classList.add("modal-open-code");
+
+        const modal = document.querySelector(".modal-code");
+        body.addEventListener("click", (e) => {
+            if (e.target.contains(modal)) {
+                // body.classList.remove("modal-open-code");
+            }
+        });
+    });
+
+    function code() {
+
+        body.classList.add("modal-open-code");
+    }
+
+
+})
