@@ -461,3 +461,48 @@ $('#relation-2, #relation-1, #relation-3').on('submit', function(e) {
 
 
 });
+
+
+/*=======================================================*/
+
+$(".wrapper-burger").on("click", function () {
+    $(this).toggleClass("wrapper-burger-active");
+    $(".mobile-menu_wrapper").toggleClass("mobile-menu_wrapper-active");
+    $(".wrapper").toggleClass("wrapper-active");
+    $('body').toggleClass('body--hidden')
+});
+
+const MainSlaider = document.querySelector(".main-slaider__wrapper");
+
+if (MainSlaider) {
+    new Swiper(MainSlaider, {
+        spaceBetween: 10,
+        slidesPerView: 1,
+        navigation: {
+            nextEl: ".main-slaider-button_right",
+            prevEl: ".main-slaider-button_left",
+        },
+        pagination: {
+            el: '.main-slaider__paginachion',
+            clickable: true,
+        },
+    });
+}
+
+//==================================================================================================================================================
+//Бэграунд картинок - "Начало"
+//==================================================================================================================================================
+
+function ibg(){
+    let ibg=document.querySelectorAll(".ibg");
+    for (var i = 0; i < ibg.length; i++) {
+        if(ibg[i].querySelector('img')){
+            ibg[i].style.backgroundImage = 'url('+ibg[i].querySelector('img').getAttribute('src')+')';
+        }
+    }
+}
+ibg();
+
+//==================================================================================================================================================
+//Бэграунд картинок - "Конец"
+//==================================================================================================================================================
